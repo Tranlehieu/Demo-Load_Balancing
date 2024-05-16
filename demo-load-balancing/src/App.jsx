@@ -18,12 +18,17 @@ function App() {
         if (response.status === 200) {
           return response.json();
         } else {
-          setMessage("Error fetching data");
+          return null;
         }
       }
       )
       .then(data => {
-      setJobs(data);
+      if(data) {
+        setJobs(data);
+        setMessage("");
+      } else {
+        setMessage("Error");
+      }
     })
     .catch(error => {
       console.error(error);
