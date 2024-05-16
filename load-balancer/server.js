@@ -23,11 +23,11 @@ let currentIndex = 0;
 // Function for getting next backend server
 function getNextServer() {
   currentIndex++;
-  if (currentIndex >= servers.length) {
+  if (currentIndex >= healthyServers.length) {
     currentIndex = 0;
   }
 
-  return servers[currentIndex];
+  return healthyServers[currentIndex];
 }
 
 // Health check
@@ -67,6 +67,10 @@ app.get("*", async (req, res) => {
 
   // Forward request
   try {
+    if (server === undefined) {
+      res.status(500).send("No healthy servers");
+      return;
+    }
     const result = await axios.get(server + req.url);
     console.log(`Forwarded to ${server}`);
     res.status(result.status).send(result.data);
